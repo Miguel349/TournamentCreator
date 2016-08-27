@@ -1,0 +1,1 @@
+from .tournamentcreator import TCXBlock

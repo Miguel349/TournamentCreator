@@ -1,0 +1,52 @@
+/* Javascript for mytestXBlock. */
+function TCXBlock(runtime, element) {
+	
+	function SelectView(){
+		$('.text_t',element).append('Select date of assesment: <input type="datetime-local" class="TournamentLeft"><br/>');
+		$('.text_t',element).append('Select number of questions of assesment: <input type="number" class="Nquestions"><br/>');
+		$('.text_t',element).append('<button class="StartTest">Start Test deadline</button>');
+		$('.StartTest', element).bind("click", QuestionsView);
+		//var myVar=setInterval(function(){updateCount()},new Date("May 19, 2014 09:00:00"));
+		//$('.start',element).remove();
+		return;
+	}
+	
+	function Login(){
+		$('.menu',element).append('User: <input type="text" class="username"><br/>');
+		$('.menu',element).append('Password: <input type="password" class="pass"><br/>');
+		$('.menu',element).append('<button class="Submit">Login</button>');
+		$('.menu',element).append('<button class="Register">Register</button>');
+		$('.login',element).remove();
+		
+		$('.Submit', element).bind("click", SendData);
+		//$('.Register', element).bind("click", LoadRegister);
+		//var myVar=setInterval(function(){updateCount()},new Date("May 19, 2014 09:00:00"));
+		//$('.start',element).remove();
+		return;
+	}
+	
+	
+	
+	function QuestionsView (){
+		alert($('.TournamentLeft', element).val().toString());
+		var date= new Date($('.TournamentLeft', element).val());		
+		var d=new Date();
+		var calculate=parseInt((date.getTime()-d.getTime())/(24*3600*1000));
+		$('.fdate', element).text(date.toString());
+		$('.date', element).text(d.toLocaleTimeString());
+		$('.count', element).text(calculate.toString());
+	}
+
+        function updateCount(date) {
+		var d = new Date();
+		var calculate=parseInt((date.getTime()-d.getTime())/(24*3600*1000));
+		$('.fdate', element).text(date.toString());
+		$('.date', element).text(d.toLocaleTimeString());
+		$('.count', element).text(calculate.toString());
+        }
+
+	
+        $(function ($) {
+		/* Here's where you'd do things on page load. */
+		$('.login', element).bind("click",Login); });
+}

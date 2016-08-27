@@ -1,0 +1,9 @@
+/* CSS for TCXBlock */
+
+.tournamentcreator_block .count {
+    font-weight: bold;
+}
+
+.tournamentcreator_block p {
+    cursor: pointer;
+}
