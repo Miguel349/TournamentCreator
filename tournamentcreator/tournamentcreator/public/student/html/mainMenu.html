@@ -1,0 +1,53 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+
+<!-- Delete Comment and js css classes -->
+<link rel="stylesheet" href="../css/student.css">
+<script src="../js/student.js"></script>
+<script src="http://www.w3schools.com/lib/w3data.js"></script>
+<br>
+<br>
+<!-- Delete Comment and js css classes -->
+
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+    <div class="Studio">
+        <div id="mainMenu">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="menu" id="joinTournament"><h1>Join Tournament</h1>
+                            <img class="list center-block" src="http://image005.flaticon.com/1/png/512/123/123389.png"/>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6">
+                        <div class="menu" id="seeResults"><h1>See Results For Tournament</h1>
+                            <img class="list center-block" src="http://image005.flaticon.com/1/png/512/123/123374.png"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Delete -->
+        <div w3-include-html="startTournament.html"></div>
+        <!-- Delete -->
+    </div>
+</div>
+<script>
+    w3IncludeHTML();
+    setTimeout(
+            function()
+            {
+                student();
+            }, 2000);
+    //Delete
+</script>

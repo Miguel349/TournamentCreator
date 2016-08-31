@@ -32,6 +32,7 @@ import pkg_resources
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, List, String, DateTime
 from xblock.fragment import Fragment
+from .tournament import Tournament
 """from xblockutils.resources import ResourceLoader"""
 	
 class TCXBlock(XBlock):

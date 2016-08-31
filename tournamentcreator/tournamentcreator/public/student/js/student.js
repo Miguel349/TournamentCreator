@@ -1,5 +1,5 @@
 /* Javascript for configuration of TournamentCreator. */
-function studio(runtime, element) {
+function student(runtime, element) {
     var n_quest = 0;
 
     var studentData= [
@@ -381,26 +381,20 @@ function studio(runtime, element) {
     }
 
     $(function ($) {
-        $('#newTournament', element).bind("click", loadNewTournament);
-        $('#modifyTournament', element).bind("click", loadNewTournament);
+        $('#startTournament', element).bind("click", loadNewTournament);
         $('#showResults', element).bind("click", loadNewTournament);
-        $('#showTournamentsStatistics', element).bind("click", loadShowTournamentsStatistics);
-        $('#downloadButton', element).bind("click", downloadData);
-        $("input.checkbox").change(function() {
-            if(this.checked) {
-                $selector=$("#"+this.value+"row");
-                $selector.show();
-                if(!$selector.hasClass( "loaded" )){
-                    newMorrisLine(studentData,questionsData,this.value);
-                    $selector.addClass("loaded");
+            var count = 60;
+            $("span").text(count);
+            var myTimer = setInterval(function(){
+                if(count > 0){
+                    count = count - 1;
+                    $(".countDown").text(count);
                 }
+                else {
+                    clearInterval(myTimer);
+                    alert("I'm done counting down!");
                 }
-            else{
-                $("#"+this.value +"row").hide();
-            }
-        });
-
-        console.log("Loading new Tournament");
+            },1000);
     });
 }
 
