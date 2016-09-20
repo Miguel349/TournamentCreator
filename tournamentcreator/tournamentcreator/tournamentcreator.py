@@ -133,7 +133,11 @@ class TCXBlock(XBlock):
 		return frag
 		
 		
-	def studio_view(self, context):	
+	def studio_view(self, context):
+		"""
+		The primary view of the TCXBlock course builder, shown to course builders
+		when instantiating the xblock.
+		"""
 		html = self.resource_string("public/admin/html/mainMenu.html")
 		frag2 = Fragment(html.format(self=self))
 		html2 = self.resource_string("public/html/New_Tournament.html")
@@ -149,7 +153,7 @@ class TCXBlock(XBlock):
 	def student_view(self, context=None):
 		"""
 		The primary view of the TCXBlock, shown to students
-		when viewing courses.
+		when viewing the xblock in their course.
 		"""
 		html = self.resource_string("public/html/tournamentcreator.html")
 		frag = Fragment(html.format(self=self))
@@ -158,32 +162,129 @@ class TCXBlock(XBlock):
 		frag.add_javascript(self.resource_string("public/js/src/tournamentcreator.js"))
 		frag.initialize_js('TCXBlock')
 		return frag
-		
+
+	"""Course Builder Handlers """
+	@XBlock.json_handler
+	def Load_Tournaments_List(self, data, suffix=''):
+		"""
+		Loads a list of all the tournaments available
+		"""
+		for x in xrange(len(self.active_tournaments)):
+			if data["Name"]==self.active_tournaments[x]['TName']:
+				for y in xrange(len(self.questions)):
+					if self.active_tournaments[x]['TournamentID']==self.nquestions[y]['TournamentID']:
+						temp.push(self.nquestions[y])
+		return 1
+	@XBlock.json_handler
+	def Load_Inactive_Tournaments(self, data, suffix=''):
+		"""
+		Loads a list of all inactive tournaments.
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+	@XBlock.json_handler
+	def Publish_Unpublish_Tournament(self, data, suffix=''):
+		"""
+		Given a tournament id adds the tournament to the published or unpublished tournament list
+		"""
+		for x in xrange(len(self.active_tournaments)):
+			if data["Name"]==self.active_tournaments[x]['TName']:
+				for y in xrange(len(self.questions)):
+					if self.active_tournaments[x]['TournamentID']==self.nquestions[y]['TournamentID']:
+						temp.push(self.nquestions[y])
+		return 1
+
+	@XBlock.json_handler
+	def Load_CourseBuilderTournament_Statistics(self, data, suffix=''):
+		"""
+		Loads the statistics of a tournament given by its id for the course builder
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+	"""Student Handlers """
+	@XBlock.json_handler
+	def Load_Student_Statistics(self, data, suffix=''):
+		"""
+		Loads the statistics of a tournament given by its id for student
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+	@XBlock.json_handler
+	def Load_AllStudentsStatistics(self, data, suffix=''):
+		"""
+		Loads the statistics of all tournaments for a student
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+	@XBlock.json_handler
+	def Load_AllCourseBuildersStatistics(self, data, suffix=''):
+		"""
+		Loads the statistics of all tournaments for a course builder
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+	@XBlock.json_handler
+	def Save_Answer(self, data, suffix=''):
+		"""
+		Saves the answer for a certain student for a certain question
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
+
+	"""Shared Handlers """
+	@XBlock.json_handler
+	def Load_Active_Tournaments(self, data, suffix=''):
+		"""
+		Loads a list of all the published tournaments
+		"""
+		self.temp[:]=[]
+		for x in xrange(len(self.active_tournaments)):
+			self.temp.append(self.active_tournaments[x])
+
+		return self.temp
+
 	@XBlock.json_handler
 	def Load_Tournament(self, data, suffix=''):
+		"""
+		Given an id, loads the questions for the tournament
+		"""
 		for x in xrange(len(self.active_tournaments)):
 				if data["Name"]==self.active_tournaments[x]['TName']:
 					for y in xrange(len(self.questions)):
 						if self.active_tournaments[x]['TournamentID']==self.nquestions[y]['TournamentID']:
 							temp.push(self.nquestions[y])
 		return 1
-		
-	@XBlock.json_handler	
-	def Load_Tournaments(self, data, suffix=''):
-		self.temp[:]=[]
-		for x in xrange(len(self.active_tournaments)):
-			self.temp.append(self.active_tournaments[x])
-		
-		return self.temp
-		
+
 
 	@XBlock.json_handler
-	def init_tournament(self, data, suffix=''):
+	def Save_Tournament(self, data, suffix=''):
 		"""
-		An example handler, which increments the data.
+		Given an id, saves the data for a tournament
 		"""
-		
-		self.tournamentID=self.tournamentID+1
 		self.nquestions=data['NQuestions']
 		self.active_tournaments.append({
 			'TournamentID': self.tournamentID,
@@ -272,36 +373,4 @@ class TCXBlock(XBlock):
 		<tournamentcreator/>
 		"""),
 		]
-		
-class SpeedTournament(XBlock):
-		# TO-DO: change this view to display your data your own way.
-	def student_view(self, context=None):
-		"""
-		The primary view of the TCXBlock, shown to students
-		when viewing courses.
-		"""
-		if self.visible:
-			html = self.resource_string("static/html/tournamentcreator.html")
-			frag = Fragment(html.format(self=self))
-			frag.add_css(self.resource_string("static/css/tournamentcreator.css"))
-			frag.add_javascript(self.resource_string("static/js/src/tournamentcreator.js"))
-			frag.initialize_js('TCXBlock')
-			return frag
-		else:	
-			html = self.resource_string("static/html/t_closed.html")
-			frag = Fragment(html.format(self=self))
-			frag.add_css(self.resource_string("static/css/tournamentcreator.css"))
-			frag.add_javascript(self.resource_string("static/js/src/t_closed.js"))
-			frag.initialize_js('TClosed')
-			return frag
-
-	def studio_view(self, context):	
-		html = self.resource_string("static/html/Studio_View.html")
-		frag = Fragment(html.format(self=self))
-		frag.add_css(self.resource_string("static/css/tournamentcreator.css"))
-		frag.add_javascript(self.resource_string("static/js/src/studio.js"))
-
-		frag.initialize_js('studio')
-		return frag
-	
 		

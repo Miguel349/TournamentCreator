@@ -49,6 +49,7 @@ function studio(runtime, element) {
     }
 
     function downloadData(){
+        console.log("Here");
        var contenidoEnBlob, nombreArchivo="file1";
             var reader = new FileReader();
             reader.onload = function (event) {
@@ -383,9 +384,9 @@ function studio(runtime, element) {
     $(function ($) {
         $('#newTournament', element).bind("click", loadNewTournament);
         $('#modifyTournament', element).bind("click", loadNewTournament);
-        $('#showResults', element).bind("click", loadNewTournament);
+        $('#showResults', element).bind("click", loadShowTournamentsStatistics);
         $('#showTournamentsStatistics', element).bind("click", loadShowTournamentsStatistics);
-        $('#downloadButton', element).bind("click", downloadData);
+        $('#downLoadTournamentData', element).bind("click", downloadData);
         $("input.checkbox").change(function() {
             if(this.checked) {
                 $selector=$("#"+this.value+"row");

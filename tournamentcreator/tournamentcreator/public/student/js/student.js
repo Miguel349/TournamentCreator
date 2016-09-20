@@ -1,6 +1,8 @@
 /* Javascript for configuration of TournamentCreator. */
 function student(runtime, element) {
-    var n_quest = 0;
+    var questionId=0;
+    var tournamentEnded=false;
+    var questionCount=0;
 
     var studentData= [
         { id: 'Michael', points: 12, time:30 },
@@ -10,26 +12,119 @@ function student(runtime, element) {
         { id: 'Jesus', points: 9, time:5 }
     ];
 
-    var questionsData= [
-        { id: 'Question1', points: 3, time:10 },
-        { id: 'Question2', points: 2, time:10 },
-        { id: 'JavascriptVideo', points: 5, time:20 },
-        { id: 'OptionCombo', points: 5, time:24 },
-        { id: 'TrueOrFalse', points: 4, time:15 },
-        { id: 'TrueOrFalse', points: 1, time:15 },
-        { id: 'TrueOrFalse', points: 2, time:15 },
-        { id: 'TrueOrFalse', points: 4, time:15 },
-        { id: 'TrueOrFalse', points: 2, time:15 },
-        { id: 'TrueOrFalse', points: 3, time:15 },
-        { id: 'TrueOrFalse', points: 5, time:15 },
-        { id: 'TrueOrFalse', points: 0, time:15 },
+    var tournamentsList = [
+        {id:0, name:"Javascript Tournament"},
+        {id:1, name: "Random Tournament"},
+        {id:2, name: "Python Tournament"}
+    ]
+    var questionData= [
+        {tournamentId:0, questionId:0,statement: "What is the result of executing this code?", text: "var j=0; \n for (j=0;j<1000;j++){\n for (var i=0;i<10;i++){\n if(i>j){\n console.log(i)}\n}\n }\n}",
+            result1:"Javascript Error", result2:"Nothing", result3: "1 2 3 4 5 6 7 8 9 2 3 4 5 6 7 8 9 3 4 5 6 7 8 9 4 5 6 7 8 9 5 6 7 8 9 6 7 8 9 7 8 9 8 9 9", result4: "0 1 2 3 4 5 6 7 8 9 2 3 4 5 6 7 8 9 3 4 5 6 7 8 9 4 5 6 7 8 9 5 6 7 8 9 6 7 8 9 7 8 9 8 9 9"},
+        {tournamentId:0, questionId:1,statement: "Do objects exist in Javascript?", text:"",
+        result1:"no", result2:"not explicitely", result3: "no, but you can emulate them with structures", result4: "yes"},
+        {tournamentId:0, questionId:2, statement: "Do you need to implement a prototype to share methods and attributes?", videoUrl:"https://www.youtube.com/embed/G6l5CHl67HQ?rel=0",
+            result1:"Not sure", result2: "yes", result3:"No, but it is a very usefull way to implement them", result4:"No, you can create javascript objects with other methods"},
+        {tournamentId:0, questionId:3, statement: "What is the result of the execution on screen?", imageUrl:"",
+        result1: "Error", result2:"42", result3: "The sum of the first N prime numbers", result4: "Nothing"}
     ];
 
-    function loadNewTournament() {
+    function loadSelectTournament() {
         $("#mainMenu").fadeOut();
-        $("#newTournamentSection").show("slow");
-        $('#quest', element).bind("click", addNQuestions);
-        $('#start', element).bind("click", sendData);
+        for(var i=0; i<tournamentsList.length;i++){
+            $('#selectTournamentContainer').append("<div class='tournamentEntryContainer' value='"+tournamentsList[i].name+"'><h2 class=tournamentEntry>"+tournamentsList[i].name+"</h2></div>");
+        }
+        $("#selectTournament").show("slow");
+        $('.tournamentEntryContainer', element).bind("click", function (e) {
+            var id = $(this).attr('value');
+            loadTournament(id);
+            var count = 0;
+            var size=0;
+            var increment=false;
+            var myTimer = setInterval(function () {
+                count = count + 1;
+                questionCount=questionCount+1;
+                $(".countDown").text(questionCount);
+                if(size>5){
+                    increment=false;
+                }
+                if (size<-5){
+                    increment=true;
+                }
+                document.getElementById("countDown").style.transform = "rotate("+size*7+"deg)";
+                if(increment)
+                    size=size+1;
+                else
+                    size=size-1;
+                if (tournamentEnded) {
+                    clearInterval(myTimer);
+                    console.log("Tournament Ended");
+
+                }
+            }, 1000);
+        });
+    }
+
+    function loadTournament(id){
+        $("#selectTournament").fadeOut();
+        //questionData=loadQuestionData(id);
+        $('#submitQuestion',element).bind("click", submitQuestion);
+        $('.studentAnswer',element).bind("click", function(e){
+            $('.activeResult').removeClass("activeResult");
+            $(this).addClass("activeResult");
+        });
+        loadQuestion();
+    }
+
+    function submitQuestion(){
+        //Post QuestionAnswer
+
+        $("#hugeCount").text(questionCount);
+        $("#hugeCount").fadeIn();
+        $("#hugeCount").fadeOut(1000);
+        questionCount=0;
+
+        loadQuestion();
+    }
+
+    function loadQuestion(){
+        $("#questionArea").fadeOut();
+        if(questionId==questionData.length){
+            endTournament();
+            return;
+        }
+        $("#statement").text(questionData[questionId].statement);
+        if(questionData[questionId].videoUrl!=undefined){
+            $('#multimediaContainer').append("<iframe width='420' height='315'"+
+            "src='"+questionData[questionId].videoUrl+"'>"+
+            "</iframe>");
+            $('#textContainer').text("");
+        }
+        else if(questionData[questionId].imageUrl!=undefined){
+            $('#multimediaContainer').text("");
+            $('#multimediaContainer').text(questionData[questionId].imageUrl);
+            $('#textContainer').text("");
+        }
+        else if(questionData[questionId != undefined]){
+            $('#textContainer').text(questionData[questionId].text);
+        }
+
+        $('#result1Text').text(questionData[questionId].result1);
+        $('#result2Text').text(questionData[questionId].result2);
+        $('#result3Text').text(questionData[questionId].result3);
+        $('#result4Text').text(questionData[questionId].result4);
+        $("#questionArea").fadeIn();
+        questionId=questionId+1;
+    }
+
+    function load(option){
+        return;
+    }
+
+    function loadTournamentsStatistics(){
+
+    }
+
+    function loadTournamentResults(id){
 
     }
 
@@ -381,20 +476,8 @@ function student(runtime, element) {
     }
 
     $(function ($) {
-        $('#startTournament', element).bind("click", loadNewTournament);
-        $('#showResults', element).bind("click", loadNewTournament);
-            var count = 60;
-            $("span").text(count);
-            var myTimer = setInterval(function(){
-                if(count > 0){
-                    count = count - 1;
-                    $(".countDown").text(count);
-                }
-                else {
-                    clearInterval(myTimer);
-                    alert("I'm done counting down!");
-                }
-            },1000);
+        $('#joinTournament', element).bind("click", loadSelectTournament);
+
     });
 }
 
