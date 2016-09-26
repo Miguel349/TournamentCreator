@@ -1,70 +1,248 @@
 /* Javascript for configuration of TournamentCreator. */
 function studio(runtime, element) {
-    var n_quest = 0;
+    var nQuest = 0;
+    var debug=true;
+    var serverInteraction=SERVERINTERACTION();
 
-    var studentData= [
-        { id: 'Michael', points: 12, time:30 },
-        { id: 'Ferran', points: 10, time:20 },
-        { id: 'John', points: 4, time:10 },
-        { id: 'Antonio', points: 6, time:14 },
-        { id: 'Jesus', points: 9, time:5 }
-    ];
+    function back(){
+        $("#mainMenu").fadeOut();
+        $('#newTournamentSection', element).fadeOut();
+        $('#mainMenu').show("slow");
+    }
 
-    var questionsData= [
-        { id: 'Question1', points: 3, time:10 },
-        { id: 'Question2', points: 2, time:10 },
-        { id: 'JavascriptVideo', points: 5, time:20 },
-        { id: 'OptionCombo', points: 5, time:24 },
-        { id: 'TrueOrFalse', points: 4, time:15 },
-        { id: 'TrueOrFalse', points: 1, time:15 },
-        { id: 'TrueOrFalse', points: 2, time:15 },
-        { id: 'TrueOrFalse', points: 4, time:15 },
-        { id: 'TrueOrFalse', points: 2, time:15 },
-        { id: 'TrueOrFalse', points: 3, time:15 },
-        { id: 'TrueOrFalse', points: 5, time:15 },
-        { id: 'TrueOrFalse', points: 0, time:15 },
-    ];
 
+    function publishTournament(){
+        $("#mainMenu").fadeOut();
+        $("#publishTournamentSection").show("slow");
+        for(var i=0; i<tournamentsActiveList.length;i++){
+            $('#selectTournamentActiveContainer').append("<div class='menu' value='"+tournamentsActiveList[i].name+"'><h5 class='title'>"+tournamentsActiveList[i].name+"</h5></div>");
+        }
+
+        for(var i=0; i<tournamentsInactiveList.length;i++){
+            $('#selectTournamentInactiveContainer').append("<div class='menu' value='"+tournamentsInactiveList[i].name+"'><h5 class='title'>"+tournamentsInactiveList[i].name+"</h5></div>");
+        }
+
+    }
     function loadNewTournament() {
+        if (debug){
+            console.log("Loading New Tournament Screen");
+        }
         $("#mainMenu").fadeOut();
         $("#newTournamentSection").show("slow");
-        $('#quest', element).bind("click", addNQuestions);
-        $('#start', element).bind("click", sendData);
+        $('#nQuest').bind("click", addNQuestions);
+        $(".form-horizontal").submit(function(e){
+            return false;
+        });
+        $('#back').bind("click",back);
+        //$('#start', element).bind("click", serverInteraction.sendData);
 
     }
 
+
     function loadModifyTournament() {
+        if (debug){
+            console.log("Loading Modify Tournament Screen");
+        }
         $(".mainMenu").fadeOut();
         $(".modifyTournamentSection").show("slow");
         $('#quest', element).bind("click", addNQuestions);
-        $('#start', element).bind("click", sendData);
+        $('#start', element).bind("click", serverInteraction.sendData);
     }
 
+
+
     function loadShowTournamentsStatistics() {
-        console.log("Showing Tournaments Statistics...");
+        $("input.checkbox").change(function() {
+            if(this.checked) {
+                $selector=$("#"+this.value+"row");
+                $selector.show();
+                if(!$selector.hasClass( "loaded" )){
+                    newMorrisLine(studentData,questionsData,this.value);
+                    $selector.addClass("loaded");
+                }
+            }
+            else{
+                $("#"+this.value +"row").hide();
+            }
+        });
+        if (debug){
+            console.log("Showing Tournaments Statistics...");
+        }
         $("#mainMenu").fadeOut();
         $("#showTournamentsStatisticsSection").show("slow");
         studentData.push(calculateAverageData(studentData,questionsData.length));
         questionsData.push(calculateAverageData(questionsData, studentData.length));
     }
 
-    function downloadData(){
+    function tournamentsStatistics(){
+        $("input.checkbox").change(function() {
+            if(this.checked) {
+                $selector=$("#"+this.value+"row");
+                $selector.show();
+                if(!$selector.hasClass( "loaded" )){
+                    newTournamentsStatistics(tournamentsResult,this.value);
+                    $selector.addClass("loaded");
+                }
+            }
+            else{
+                $("#"+this.value +"row").hide();
+            }
+        });
+        if (debug){
+            console.log("Showing Tournaments Statistics...");
+        }
+        $("#mainMenu").fadeOut();
+        $("#tournamentsStatisticsSection").show("slow");
+        studentData.push(calculateAverageData(studentData,questionsData.length));
+        questionsData.push(calculateAverageData(questionsData, studentData.length));
+    }
+
+    function newTournamentsStatistics(tournamentsResult,id){
+        if(id=="AG"){
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: id,
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: tournamentsResult,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['averageGrades'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Average Grades']
+            });
+        }
+        if(id=="TG"){
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: id,
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: tournamentsResult,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['averageQuestionTime'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['name']
+            });
+        }
+        if(id=="TT"){
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: id,
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: tournamentsResult,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['averageTotalTime'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['name']
+            });
+        }
+
+
+    }
+
+    function addNQuestions() {
         console.log("Here");
-       var contenidoEnBlob, nombreArchivo="file1";
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var save = document.createElement('a');
-                save.href = event.target.result;
-                save.target = '_blank';
-                save.download = nombreArchivo || 'archivo.dat';
-                var clicEvent = new MouseEvent('click', {
-                    'view': window,
-                    'bubbles': true,
-                    'cancelable': true
-                });
-                save.dispatchEvent(clicEvent);
-                (window.URL || window.webkitURL).revokeObjectURL(save.href);
-            };
+        var i = 0;
+        var n = ($('#nQuestions').val());
+        for (i = 0; i < n; i++) {
+            addQuestion(nQuest);
+            nQuest++;
+        }
+
+        $("select").change(function () {
+            var selected = $(this).find(':selected').attr('value');
+            console.log(selected);
+            var id = $(this).attr('id');
+            selectOption(selected, id);
+            console.log("Adding fields");
+
+        });
+    }
+
+    function addQuestion() {
+        var QuestionTemplate = '<div id="Question' + nQuest + '"class="question">' +
+            '<h5 class="display">Question ' + nQuest + '</h5>' +
+            '<select class="display selectType ' + nQuest + '" id="' + nQuest + '">' +
+            '<option value="Select">Select a Type</option>' +
+            '<option value="Text">Text</option>' +
+            '<option value="Image">Image and Text</option>' +
+            '<option value="Video">Video and Text</option>' +
+            '</select>'+
+            '<div class="destroy">X</div></div>';
+        $('.questions').append(QuestionTemplate);
+    }
+
+
+    function selectOption(option, id) {
+        $('.Container' + id, element).remove();
+        var QuestionTemplate = '<div class="Container' + id + '">';
+        var Question = '<br/><div class="row marginTS"><div class="col-xs-3"><label class="control-label">Question Text </label></div><div class="col-xs-8"><input type="text" placeholder="Question Title" class="form-control QuestionI' + id + '"></div></div>';
+        var QuestionStatement;
+        var answer1 = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Answer 1 </label> </div><div class="col-xs-8"><input type="text" placeholder="Answer" class="form-control Answer' + id + '1"></div></div>';
+        var answer2 = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Answer 2 </label> </div><div class="col-xs-8"><input type="text" placeholder="Answer" class="form-control Answer' + id + '2"></div></div>';
+        var answer3 = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Answer 3 </label> </div><div class="col-xs-8"><input type="text" placeholder="Answer" class="form-control Answer' + id + '3"></div></div>';
+        var answer4 = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Answer 4 </label> </div><div class="col-xs-8"><input type="text" placeholder="Answer" class="form-control Answer' + id + '4"></div></div>';
+        var correctAnswer = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Correct Answer </label> </div><div class="col-xs-8"><input type="number" class="form-control Correct' + id + '" placeholder="Correct Answer in Number format"></div></div>';
+
+        if (option == "Text") {
+            QuestionStatement = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Question Additional Statement </label></div><div class="col-xs-8"><input type="text" placeholder="Question Additional Statement" class="form-control QuestionBodyI' + id + '"></div></div>';
+        }
+
+        if (option == "Image") {
+           QuestionStatement = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Image Url </label></div><div class="col-xs-8"><input type="text" placeholder="Image Url" class="form-control QuestionBodyI' + id + '"></div></div>';
+
+        }
+        if (option == "Video") {
+            QuestionStatement = '<div class="row marginTS"><div class="col-xs-3"><label class="control-label">Video Url </label></div><div class="col-xs-8"><input type="text" placeholder="Video Url" class="form-control QuestionBodyI' + id + '"></div></div>';
+
+
+        }
+        QuestionTemplate = QuestionTemplate + Question + QuestionStatement+ answer1 + answer2 + answer3 + answer4 + correctAnswer + "</div>";
+
+        $('#Question' + id, element).append(QuestionTemplate);
+
+
+    }
+
+
+
+    function downloadData(){
+        $('#mainMenu').hide();
+        $('#selectTournamentSection').show('slow');
+        if (debug){
+            console.log("Downloading Data");
+        }
+        for(var i=0; i<tournamentsActiveList.length;i++){
+            $('#selectTournamentSelectorActiveContainer').append("<div class='menu' value='"+tournamentsActiveList[i].name+"'><h5 class='title'>"+tournamentsActiveList[i].name+"</h5></div>");
+        }
+        var contenidoEnBlob, nombreArchivo="file1";
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var save = document.createElement('a');
+            save.href = event.target.result;
+            save.target = '_blank';
+            save.download = nombreArchivo || 'archivo.dat';
+            var clicEvent = new MouseEvent('click', {
+                'view': window,
+                'bubbles': true,
+                'cancelable': true
+            });
+            save.dispatchEvent(clicEvent);
+            (window.URL || window.webkitURL).revokeObjectURL(save.href);
+        };
         var objectString="Student Data: \n";
         for(var i=0;i<studentData.length;i++){
             objectString=objectString+JSON.stringify(studentData[i])+"\n";
@@ -75,23 +253,27 @@ function studio(runtime, element) {
             objectString=objectString+JSON.stringify(questionsData[i])+"\n";
         }
         var oMyBlob = new Blob([objectString], {type : 'json'});
-            reader.readAsDataURL(oMyBlob);
+        reader.readAsDataURL(oMyBlob);
     }
+
+
+
+
+
+
 
     function newMorrisLine(studentData, questionsData,id){
         /* var totalAnswers=studentData.length-1;
-        new Morris.Donut({
-            element: 'donut-example',
-            data: [
-                {label: "Download Sales", value: 12},
-                {label: "In-Store Sales", value: 30},
-                {label: "Mail-Order Sales", value: 20}
-            ]
-        });
+         new Morris.Donut({
+         element: 'donut-example',
+         data: [
+         {label: "Download Sales", value: 12},
+         {label: "In-Store Sales", value: 30},
+         {label: "Mail-Order Sales", value: 20}
+         ]
+         });
 
-        */
-        console.log(studentData);
-        console.log(questionsData);
+         */
         switch(id){
             case "PABS":
                 new Morris.Bar({
@@ -233,175 +415,14 @@ function studio(runtime, element) {
         return average;
     }
 
-    function addNQuestions() {
-        console.log("Here");
-        var i = 0;
-        var n = ($('.NQuestions', element).val());
-        for (i = 0; i < n; i++) {
-
-            addQuestion();
-            n_quest++;
-        }
-        $("select").change(function () {
-            var selected = $(this).val();
-            var id = $(this).attr('class');
-
-            SelectOption(selected, id);
-            console.log($(this));
-
-        });
-
-
-    }
-
-    function addQuestion() {
-        var QuestionTemplate = '<div id="Question' + n_quest + ' class="question""><p>Question ' + n_quest + '</p><select class=' + n_quest + ' id="' + n_quest + '"><option value="Select">Select a Type</option><option value="Multiple">MultipleQuestion</option><option value="Image">Image and Text</option><option value="Video">Video and Text</option></select></div>';
-        $('.questions', element).append(QuestionTemplate);
-    }
-
-    function selectOption(option, id) {
-
-        if (option == "Multiple") {
-            var QuestionTemplate = '<div class="Container' + id + '">';
-            $('.Container' + id, element).remove();
-            QuestionTemplate = '<div class="Container' + id + '">';
-            var Question = '<br/>Question Text <input type="text" class="QuestionI' + id + '"><br/>';
-            var answer1 = 'Answer 1 <input type="text" class="Answer' + id + '1"><br/>';
-            var answer2 = 'Answer 2 <input type="text" class="Answer' + id + '2"><br/>';
-            var answer3 = 'Answer 3 <input type="text" class="Answer' + id + '3"><br/>';
-            var answer4 = 'Answer 4 <input type="text" class="Answer' + id + '4"><br/>';
-            var correct_answer = 'Correct Answer <input type="number" class="Correct' + id + '"><br/>';
-            QuestionTemplate = QuestionTemplate + Question + answer1 + answer2 + answer3 + answer4 + correct_answer + "</div>";
-            $('.Question' + id, element).append(QuestionTemplate);
-            return;
-        }
-
-        if (option == "Image") {
-            var QuestionTemplate = '<div class="Container' + id + '">';
-            $('.Container' + id, element).remove();
-            QuestionTemplate = '<div class="Container' + id + '">';
-            var Question = '<br/>Question Text <input type="text" class="QuestionI' + id + '"><br/>';
-            var answer1 = 'Answer<input type="text" class="Answer' + id + '"><br/>';
-            var url = 'Url <input type="text" class="Url' + id + '"><br/>';
-            var note = 'Tip<input type="text" class="Tip' + id + '"><br/>';
-            QuestionTemplate = QuestionTemplate + Question + note + answer1 + url + "</div>";
-            $('.Question' + id, element).append(QuestionTemplate);
-            return;
-        }
-        if (option == "Video") {
-            var QuestionTemplate = '<div class="Container' + id + '">';
-            $('.Container' + id, element).remove();
-            QuestionTemplate = '<div class="Container' + id + '">';
-            var Question = '<br/>Question Text <input type="text" class="QuestionI' + id + '"><br/>';
-            var answer1 = 'Answer<input type="text" class="Answer' + id + '"><br/>';
-            var url = 'Url <input type="text" class="Url' + id + '"><br/>';
-            var note = 'Tip<input type="text" class="Tip' + id + '"><br/>';
-            QuestionTemplate = QuestionTemplate + Question + note + answer1 + url + "</div>";
-            $('.Question' + id, element).append(QuestionTemplate);
-            return;
-        }
-        else {
-            alert("Not a valid option");
-        }
-
-    }
-
-    function multipleQuestion() {
-
-
-    }
-
-    function sendData() {
-
-
-        if (n_quest == 0) {
-            alert("Not enough Questions");
-            return;
-        }
-
-        var handlerUrl = runtime.handlerUrl(element, 'init_tournament');
-        var n = 1;
-        var TN = $('.TName').val();
-        alert(TN);
-        var tournament = {
-            TName: TN,
-            NQuestions: n_quest,
-            question: []
-        };
-        var type = [n_quest];
-        var j = 0;
-        $('select').each(function (index) {
-            console.log($(this).val());
-            type[j] = $(this).val();
-            j++;
-        });
-        for (var i = 0; i < n_quest; i++) {
-            alert($('.Correct' + i).val());
-            if (type[i] == "Multiple") {
-                tournament.question.push({
-                    "QuestionN": i,
-                    "Type": "Multiple",
-                    "Question": ($('.QuestionI' + i, element).val()),
-                    "Answer1": ($('.Answer' + i + '1', element).val()),
-                    "Answer2": ($('.Answer' + i + '2', element).val()),
-                    "Answer3": ($('.Answer' + i + '3', element).val()),
-                    "Answer4": ($('.Answer' + i + '4', element).val()),
-                    "CAnswer": ($('.Correct' + i, element).val()),
-
-                });
-            }
-            if (type[i] == "Image") {
-
-                tournament.question.push({
-                    "QuestionN": i,
-                    "Type": "Image",
-                    "Question": ($('.QuestionI' + i, element).val()),
-                    "Tip": ($('.Tip' + i, element).val()),
-                    "Answer": ($('.Answer' + i, element).val()),
-                    "Url": ($('.Url' + i, element).val()),
-                });
-            }
-
-            if (type[i] == "Video") {
-                tournament.question.push({
-                    "QuestionN": i,
-                    "Type": "Video",
-                    "Question": ($('.QuestionI' + i, element).val()),
-                    "Tip": ($('.Tip' + i, element).val()),
-                    "Answer": ($('.Answer' + i, element).val()),
-                    "Url": ($('.Url' + i, element).val()),
-                });
-            }
-
-
-        }
-        //runtime.notify('save', {state: 'start'});
-        $.post(handlerUrl, JSON.stringify(tournament)).done(function (response) {
-            //runtime.notify('save', {state: 'end'});
-        });
-    }
-
     $(function ($) {
         $('#newTournament', element).bind("click", loadNewTournament);
         $('#modifyTournament', element).bind("click", loadNewTournament);
+        $('#publishTournament', element).bind("click", publishTournament);
         $('#showResults', element).bind("click", loadShowTournamentsStatistics);
-        $('#showTournamentsStatistics', element).bind("click", loadShowTournamentsStatistics);
+        $('#showTournamentsStatistics', element).bind("click", tournamentsStatistics);
         $('#downLoadTournamentData', element).bind("click", downloadData);
-        $("input.checkbox").change(function() {
-            if(this.checked) {
-                $selector=$("#"+this.value+"row");
-                $selector.show();
-                if(!$selector.hasClass( "loaded" )){
-                    newMorrisLine(studentData,questionsData,this.value);
-                    $selector.addClass("loaded");
-                }
-                }
-            else{
-                $("#"+this.value +"row").hide();
-            }
-        });
 
-        console.log("Loading new Tournament");
     });
 }
 

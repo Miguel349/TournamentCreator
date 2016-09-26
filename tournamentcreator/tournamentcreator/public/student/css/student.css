@@ -3,7 +3,7 @@
 
 .hugeCount{
     position:absolute;
-    color:#ad9fff;
+    color:#a1ddff;
     z-index:10;
     text-align:center;
     font-size:150px;
@@ -12,42 +12,54 @@
     top:40%;
 }
 
-.countDown{
-    color:#ad9fff;
-    font-size:36px;
-    margin-top:12px;
-    text-shadow: white;
-    text-align:center;
-    margin-left:10px;
+.countDownContainer{
+    border-color:#e3e3e3;
+    border-style:solid;
+    width:100%;
+    height:60px;
+    float:right;
+    margin-top:10px;
 
 }
+.countDown{
+    color:#a1ddff;
+    font-size:36px;
+    text-shadow: white;
+    text-align:center;
+
+}
+#multimediaContainer{
+    text-align:center;
+}
 .list{
-    height:100px;
-    width:100px;
-    margin:auto;
+    margin-top:5px;
+    margin-right:30px;
+    height:35px;
+    width:35px;
+    float:right;
 }
 .title{
-    text-align:center;
-    font-size:20px;
-    padding-top:10px;
+    text-align:left;
+    margin-left:30px;
+    font-size:15px;
+    padding-top:5px;
 }
 .menu{
     border-radius:5px;
     border-style: solid;
     border-width: medium;
-    border-color:#a1ddff;
+    border-color:#e3e3e3;
     margin-bottom:20px;
-    background-color:#d8f1ff;
-    padding-bottom:20px;
-    text-align:center;
-    height:250px;
+    background-color:#f1efef;
+    text-align:left;
+    height:50px;
 }
 .tournamentList{
     border-radius:5px;
     border-style: solid;
     border-width: medium;
-    border-color:#a1ddff;
-    background-color:#d8f1ff;
+    border-color:#e3e3e3;
+    background-color:#f1efef;
     text-align:center;
     padding-bottom:50px;
 }
@@ -58,8 +70,8 @@
     border-radius:5px;
     border-style: solid;
     border-width: medium;
-    border-color:#a1ddff;
-    background-color:#eaf7ff;
+    border-color:#e3e3e3;
+    background-color:#f1efef;
     text-align:center;
     margin-bottom:10px;
     height:90px;
@@ -70,22 +82,19 @@
     margin-left:5px;
 }
 .configuration{
-    margin-top:30px;
-    border-radius:20px;
+    border-color:#e3e3e3;
     border-style: solid;
     border-width: medium;
-    border-color:#a1ddff;
-    margin-bottom:20px;
-    background-color:#d8f1ff;
-    padding-bottom:20px;
-    text-align:center;
+    margin: auto;
+    width:1170px;
+
 }
 .question{
     padding:10px;
     margin:15px;
     border-radius:10px;
-    border-color:#a1ddff;
-    background-color:#d8f1ff;
+    border-color:#e3e3e3;
+    background-color:#f1efef;
 }
 
 
@@ -105,13 +114,7 @@ th, td {
 }
 
 .studentQuestion{
-    border-radius:5px;
-    border-style: solid;
-    border-width: medium;
-    border-color:#a1ddff;
-    background-color:#d8f1ff;
-    text-align:center;
-    padding-bottom:50px;
+
 }
 
 .studentAnswer{
@@ -121,8 +124,8 @@ th, td {
     border-radius:5px;
     border-style: solid;
     border-width: medium;
-    border-color:#a1ddff;
-    background-color:#eaf7ff;
+    border-color:#e3e3e3;
+    background-color:#f1efef;
     text-align:center;
     margin-bottom:10px;
     font-size:20px;
@@ -130,7 +133,8 @@ th, td {
 }
 
 .activeResult{
-    background-color:#a1ddff;
+    border-color:#a1ddff;
+    background-color:#eaf7ff;
 }
 
 .resultsContainer{

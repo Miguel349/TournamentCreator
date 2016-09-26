@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div hidden id="tournamentsStatisticsSection" class="configuration">
+    <div class="row">
+        <div class="col-xs-2">
+            <button id="back" class="back">Main Menu</button>
+        </div>
+        <div class="col-xs-6 col-xs-offset-1">
+            <h1 class="text-center">Javascript Tournament</h1>
+        </div>
+    </div>
+    <div class="col-xs-8 col-xs-offset-2">
+        <label class="checkbox-inline"><input type="checkbox" id="showABS" class="checkbox" value="AG">Show average grades</label>
+        <label class="checkbox-inline"><input type="checkbox" id="showPABS" class="checkbox" value="TG">Show average times</label>
+        <label class="checkbox-inline"><input type="checkbox" id="showTBS" class="checkbox" value="TT">Show total Time</label>
+        <br>
+    </div>
 
-</body>
-</html>
+    <div hidden class="row" id="AGrow">
+        <div class="col-xs-6 col-xs-offset-3">
+            <h3 class="text-center">Grades average</h3>
+            <div id="AG" style="height: 250px; width:100%"></div>
+        </div>
+    </div>
+    <div hidden class="row" id="TGrow">
+        <div class="col-xs-6 col-xs-offset-3">
+            <h3 class="text-center">Time average</h3>
+            <div id="TG" style="height: 250px; width:100%"></div>
+        </div>
+    </div>
+    <div hidden class="row" id="TTrow">
+        <div class="col-xs-6 col-xs-offset-3">
+            <h2 class="text-center">Total time</h2>
+            <div id="TT" style="height: 250px; width:100%"></div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+</div>
