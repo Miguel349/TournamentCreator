@@ -6,26 +6,43 @@
         <div class="col-xs-6 col-xs-offset-1">
             <h1 class="text-center">Javascript Tournament</h1>
         </div>
+        <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+            <h4 class="text-center">Your position with respect to correct answers is <span id="position"></span>  out of a total of <span class="nParticipants"></span>  participants.</h4>
+        </div>
+        <div class="col-xs-6 col-xs-offset-3">
+            <h4 class="text-center">Your position with respect to time is <span id="timePosition"></span> out of a total of <span class="nParticipants"></span> participants.</h4>
+        </div>
+        </div>
     </div>
 
-    <div hidden class="row" id="ATrow">
+
+    <div hidden class="row" id="Trow">
         <div class="col-xs-6 col-xs-offset-3">
-            <h3 class="text-center">Correct answers by student</h3>
-            <div id="AT" style="height: 250px; width:100%"></div>
+            <h3 class="text-center">Time</h3>
+            <div id="T" style="height: 250px; width:500px;"></div>
         </div>
     </div>
-    <div hidden class="row" id="TSTrow">
+    <div hidden class="row" id="TArow">
         <div class="col-xs-6 col-xs-offset-3">
-            <h3 class="text-center">Percentage of correct answers by student</h3>
-            <div id="TST" style="height: 250px; width:100%"></div>
+            <h3 class="text-center">Time Average</h3>
+            <div id="TA" style="height: 250px; width:500px;"></div>
         </div>
     </div>
+
     <div hidden class="row" id="Rrow">
         <div class="col-xs-6 col-xs-offset-3">
-            <h2 class="text-center">Time by student</h2>
-            <div id="R" style="height: 250px; width:100%"></div>
+            <h2 class="text-center">Results</h2>
+            <div id="R" style="height: 250px; width:500px;"></div>
         </div>
     </div>
+    <div hidden class="row" id="RArow">
+        <div class="col-xs-6 col-xs-offset-3">
+            <h2 class="text-center">Results Average</h2>
+            <div id="RA" style="height: 250px; width:500px"></div>
+        </div>
+    </div>
+
     <br>
     <br>
 </div>

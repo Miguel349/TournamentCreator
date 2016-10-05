@@ -5,9 +5,12 @@ function student(runtime, element) {
     var questionCount=0;
 
 
-
+    function loadMainMenu(){
+        clear();
+        $('#mainMenu').show();
+    }
     function loadSelectTournament() {
-        $("#mainMenu").fadeOut();
+        clear();
         for(var i=0; i<tournamentsList.length;i++){
             $('#selectTournamentContainer').append("<div class='menu' value='"+tournamentsList[i].name+"'><h5 class=title>"+tournamentsList[i].name+"</h5></div>");
         }
@@ -44,7 +47,7 @@ function student(runtime, element) {
 
 
     function loadSelectResultsTournament() {
-        $("#mainMenu").fadeOut();
+        clear();
         for(var i=0; i<tournamentsList.length;i++){
             $('#selectTournamentContainer').append("<div class='menu' value='"+tournamentsList[i].name+"'><h5 class=title>"+tournamentsList[i].name+"</h5></div>");
         }
@@ -59,7 +62,7 @@ function student(runtime, element) {
     }
 
     function loadSelectAllResultsTournament() {
-        $("#mainMenu").fadeOut();
+        clear();
         for(var i=0; i<tournamentsList.length;i++){
             $('#selectTournamentContainer').append("<div class='menu' value='"+tournamentsList[i].name+"'><h5 class=title>"+tournamentsList[i].name+"</h5></div>");
         }
@@ -107,8 +110,15 @@ function student(runtime, element) {
     function loadResultTournament(id){
         $("#selectTournament").fadeOut();
         //questionData=loadQuestionData(id);
-        $("#view")
+        $("#showTournamentStatisticsSection").show("slow");
+        newGraph();
+        $("#Trow").show();
+        $("#TArow").show();
+        $("#Rrow").show();
+        $("#RArow").show();
     }
+
+
 
     function submitQuestion(){
         //Post QuestionAnswer
@@ -116,17 +126,43 @@ function student(runtime, element) {
         $("#hugeCount").text(questionCount);
         $("#hugeCount").fadeIn();
         $("#hugeCount").fadeOut(1000);
+
+        var $selector=$('.activeResult');
+        var answer=$selector.attr('value');
+        $selector.removeClass('activeResult');
+        var correct=0;
+        if(answer==questionData[questionId].correct){
+            correct=1;
+        }
+        michaelData.push({id:questionData[questionId].questionId,correct:correct,time:questionCount,answerGiven:answer,correctAnswer:questionData[questionId].correct});
+        console.log(michaelData);
         questionCount=0;
-
-        loadQuestion();
-    }
-
-    function loadQuestion(){
-        $("#questionArea").fadeOut();
+        questionId=questionId+1;
         if(questionId==questionData.length){
+            console.log("Ending Tournament...");
             endTournament();
             return;
+         }
+        else{
+        loadQuestion();
         }
+    }
+
+    function endTournament(){
+        clear();
+        loadResultTournament(0);
+    }
+
+    function clear(){
+        $('#joinTournament').hide();
+        $('#mainMenu').hide();
+        $('#seeResults').hide();
+        $('#seeAllResults').hide();
+        $('#questionArea').hide();
+    }
+    function loadQuestion(){
+        $("#questionArea").fadeOut();
+        console.log("Question Id: "+questionId+ " QuestionDataLength: "+questionData.length);
         $("#statement").text(questionData[questionId].statement);
         if(questionData[questionId].videoUrl!=undefined){
             $('#multimediaContainer').append("<iframe width='420' height='315'"+
@@ -148,7 +184,7 @@ function student(runtime, element) {
         $('#result3Text').text(questionData[questionId].result3);
         $('#result4Text').text(questionData[questionId].result4);
         $("#questionArea").fadeIn();
-        questionId=questionId+1;
+
     }
 
     function load(option){
@@ -324,16 +360,6 @@ function student(runtime, element) {
                 });
                 break;
         }
-
-
-
-
-
-
-
-
-
-
     }
 
     function calculateAverageData(data,length) {
@@ -510,10 +536,71 @@ function student(runtime, element) {
         });
     }
 
+    function loadAllResultsTournaments(){
+        $("#mainMenu").fadeOut();
+        //questionData=loadQuestionData(id);
+        $("#allStudentsStatistics").show("slow");
+        newTournamentsStatistics();
+        $("#AGrow").show();
+        $("#TGrow").show();
+        $("#TTrow").show();
+    }
+    function newTournamentsStatistics(){
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: "AG",
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: michaelTournamentData,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['result'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Average Grades']
+            });
+
+
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: "TG",
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: michaelTournamentData,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['averageTime'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Average Time per Question']
+            });
+
+            new Morris.Line({
+                parseTime:false,
+                // ID of the element in which to draw the chart.
+                element: "TT",
+                // Chart data records -- each entry in this array corresponds to a point on
+                // the chart.
+                data: michaelTournamentData,
+                // The name of the data record attribute that contains x-values.
+                xkey: 'name',
+                // A list of names of data record attributes that contain y-values.
+                ykeys: ['totalTime'],
+                // Labels for the ykeys -- will be displayed when you hover over the
+                // chart.
+                labels: ['Total Time For Tournament']
+            });
+    }
+
     $(function ($) {
         $('#joinTournament', element).bind("click", loadSelectTournament);
         $('#seeResults', element).bind("click", loadSelectResultsTournament);
-        $('#seeAllResults', element).bind("click", loadSelectAllResultsTournament);
+        $('#seeAllResults', element).bind("click", loadAllResultsTournaments);
+        $('.back',element).bind("click",loadMainMenu);
     });
 }
 
